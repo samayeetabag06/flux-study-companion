@@ -35,7 +35,7 @@ const DEFAULT_SUBJECTS = ["DSA", "Web Dev", "Mathematics", "Physics", "Chemistry
 
 function useSubjects() {
   const [subjects, setSubjects] = useState<string[]>(() => {
-    const saved = localStorage.getItem("studyforge-subjects");
+    const saved = localStorage.getItem("flux-subjects");
     return saved ? JSON.parse(saved) : DEFAULT_SUBJECTS;
   });
 
