@@ -28,12 +28,7 @@ export default function AppSidebar() {
   return (
     <aside className="hidden md:flex flex-col w-64 bg-sidebar text-sidebar-foreground min-h-screen p-4 gap-2">
       <div className="flex items-center gap-3 px-3 py-4 mb-4">
-        <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-          <Flame className="w-5 h-5 text-primary-foreground" />
-        </div>
-        <h1 className="font-display text-xl font-bold tracking-tight text-sidebar-foreground">
-          Flux
-        </h1>
+        <img src={fluxLogo} alt="Flux logo" className="h-10 w-auto object-contain" />
       </div>
 
       <nav className="flex flex-col gap-1 flex-1">

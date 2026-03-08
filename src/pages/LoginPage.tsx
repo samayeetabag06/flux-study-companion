@@ -133,11 +133,8 @@ export default function LoginPage() {
       {/* Right Panel - Form */}
       <div className="flex-1 flex items-center justify-center p-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm space-y-6">
-          <div className="lg:hidden flex items-center gap-2 justify-center mb-4">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <Flame className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-display font-bold text-xl text-foreground">Flux</span>
+          <div className="lg:hidden flex items-center justify-center mb-4">
+            <img src={fluxLogo} alt="Flux logo" className="h-10 w-auto object-contain" />
           </div>
 
           <div className="text-center lg:text-left">
