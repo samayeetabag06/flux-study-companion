@@ -75,7 +75,7 @@ export default function StudySessionLogger({ onSessionSave }: Props) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("studyforge-sessions", JSON.stringify(sessions));
+    localStorage.setItem("flux-sessions", JSON.stringify(sessions));
   }, [sessions]);
 
   useEffect(() => {

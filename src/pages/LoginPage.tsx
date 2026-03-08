@@ -139,7 +139,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
               <Flame className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-xl text-foreground">StudyForge</span>
+            <span className="font-display font-bold text-xl text-foreground">Flux</span>
           </div>
 
           <div className="text-center lg:text-left">

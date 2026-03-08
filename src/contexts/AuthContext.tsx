@@ -1,9 +1,9 @@
 import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
-const SESSION_KEY = "studyforge-user";
+const SESSION_KEY = "flux-user";
 const SESSION_TIMEOUT = 30 * 60 * 1000; // 30 minutes
-const ACTIVITY_KEY = "studyforge-last-activity";
+const ACTIVITY_KEY = "flux-last-activity";
 
 export interface UserProfile {
   name: string;
