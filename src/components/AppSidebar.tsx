@@ -7,10 +7,10 @@ import {
   BarChart3,
   BookOpen,
   Trophy,
-  Flame,
   UserCircle,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import fluxLogo from "@/assets/flux-logo.png";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
