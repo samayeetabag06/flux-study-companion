@@ -5,7 +5,7 @@ import {
   Calendar,
   Timer,
   BarChart3,
-  BookOpen,
+  UserCircle,
 } from "lucide-react";
 
 const navItems = [
@@ -13,7 +13,7 @@ const navItems = [
   { to: "/goals", icon: Target, label: "Goals" },
   { to: "/calendar", icon: Calendar, label: "Cal" },
   { to: "/pomodoro", icon: Timer, label: "Focus" },
-  { to: "/analytics", icon: BarChart3, label: "Stats" },
+  { to: "/profile", icon: UserCircle, label: "Profile" },
 ];
 
 export default function MobileNav() {
