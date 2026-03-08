@@ -69,7 +69,7 @@ export default function StudySessionLogger({ onSessionSave }: Props) {
   const [showSubjectInput, setShowSubjectInput] = useState(false);
   const { subjects, addSubject, removeSubject } = useSubjects();
   const [sessions, setSessions] = useState<StudySession[]>(() => {
-    const saved = localStorage.getItem("studyforge-sessions");
+    const saved = localStorage.getItem("flux-sessions");
     return saved ? JSON.parse(saved) : [];
   });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
