@@ -10,6 +10,7 @@ import CalendarPage from "./pages/CalendarPage";
 import PomodoroPage from "./pages/PomodoroPage";
 import AnalyticsPage from "./pages/AnalyticsPage";
 import FlashcardsPage from "./pages/FlashcardsPage";
+import LoginPage from "./pages/LoginPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
