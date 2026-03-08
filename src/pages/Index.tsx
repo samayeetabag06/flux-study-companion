@@ -15,6 +15,12 @@ const defaultGoals = [
 
 export default function Index() {
   const [goals, setGoals] = useState(defaultGoals);
+  const [studyData, setStudyData] = useState({
+    todayHours: 3.5,
+    weekHours: 24,
+    monthTarget: 200,
+    monthHours: 87,
+  });
 
   const addGoal = (goal: { id: string; name: string; date: string; color: string }) => {
     setGoals((prev) => [...prev, goal]);
@@ -22,6 +28,10 @@ export default function Index() {
 
   const removeGoal = (id: string) => {
     setGoals((prev) => prev.filter((g) => g.id !== id));
+  };
+
+  const updateStudy = (field: "todayHours" | "weekHours" | "monthHours" | "monthTarget", value: number) => {
+    setStudyData((prev) => ({ ...prev, [field]: value }));
   };
 
   const hour = new Date().getHours();
@@ -43,15 +53,23 @@ export default function Index() {
       </motion.div>
 
       {/* Countdown Timers */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {goals.map((goal) => (
-          <CountdownCard key={goal.id} goal={goal} onRemove={removeGoal} />
-        ))}
-      </div>
+      {goals.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {goals.map((goal) => (
+            <CountdownCard key={goal.id} goal={goal} onRemove={removeGoal} />
+          ))}
+        </div>
+      )}
 
       {/* Study Stats & Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <StudyTrackerCard todayHours={3.5} weekHours={24} monthTarget={200} monthHours={87} />
+        <StudyTrackerCard
+          todayHours={studyData.todayHours}
+          weekHours={studyData.weekHours}
+          monthTarget={studyData.monthTarget}
+          monthHours={studyData.monthHours}
+          onUpdate={updateStudy}
+        />
         <WeeklyChart />
         <div className="space-y-4">
           <QuickActions />
