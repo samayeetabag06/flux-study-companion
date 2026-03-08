@@ -58,7 +58,7 @@ export default function Index() {
         className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
       >
         <div>
-          <h1 className="text-2xl font-display font-bold text-foreground">{greeting}, Scholar 👋</h1>
+          <h1 className="text-2xl font-display font-bold text-foreground">{greeting}, {user?.name || "Scholar"} 👋</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Stay consistent, stay ahead.</p>
         </div>
         <div className="flex gap-2">
