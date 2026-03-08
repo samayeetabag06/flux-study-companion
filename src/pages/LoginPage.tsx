@@ -111,7 +111,7 @@ export default function LoginPage() {
               <Flame className="w-8 h-8 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl font-display font-bold text-white mb-3">StudyForge</h1>
+          <h1 className="text-4xl font-display font-bold text-white mb-3">Flux</h1>
           <p className="text-white/80 text-lg max-w-sm">
             Your personal study companion. Track progress, build habits, and ace your exams.
           </p>
@@ -139,7 +139,7 @@ export default function LoginPage() {
             <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
               <Flame className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-xl text-foreground">StudyForge</span>
+            <span className="font-display font-bold text-xl text-foreground">Flux</span>
           </div>
 
           <div className="text-center lg:text-left">

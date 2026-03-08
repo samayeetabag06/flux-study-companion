@@ -35,12 +35,12 @@ const DEFAULT_SUBJECTS = ["DSA", "Web Dev", "Mathematics", "Physics", "Chemistry
 
 function useSubjects() {
   const [subjects, setSubjects] = useState<string[]>(() => {
-    const saved = localStorage.getItem("studyforge-subjects");
+    const saved = localStorage.getItem("flux-subjects");
     return saved ? JSON.parse(saved) : DEFAULT_SUBJECTS;
   });
 
   useEffect(() => {
-    localStorage.setItem("studyforge-subjects", JSON.stringify(subjects));
+    localStorage.setItem("flux-subjects", JSON.stringify(subjects));
   }, [subjects]);
 
   const addSubject = (name: string) => {
@@ -69,13 +69,13 @@ export default function StudySessionLogger({ onSessionSave }: Props) {
   const [showSubjectInput, setShowSubjectInput] = useState(false);
   const { subjects, addSubject, removeSubject } = useSubjects();
   const [sessions, setSessions] = useState<StudySession[]>(() => {
-    const saved = localStorage.getItem("studyforge-sessions");
+    const saved = localStorage.getItem("flux-sessions");
     return saved ? JSON.parse(saved) : [];
   });
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    localStorage.setItem("studyforge-sessions", JSON.stringify(sessions));
+    localStorage.setItem("flux-sessions", JSON.stringify(sessions));
   }, [sessions]);
 
   useEffect(() => {

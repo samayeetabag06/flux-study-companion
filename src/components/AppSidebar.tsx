@@ -32,7 +32,7 @@ export default function AppSidebar() {
           <Flame className="w-5 h-5 text-primary-foreground" />
         </div>
         <h1 className="font-display text-xl font-bold tracking-tight text-sidebar-foreground">
-          StudyForge
+          Flux
         </h1>
       </div>
 
