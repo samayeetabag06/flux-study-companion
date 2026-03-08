@@ -59,7 +59,10 @@ export default function Index() {
           <h1 className="text-2xl font-display font-bold text-foreground">{greeting}, Scholar 👋</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Stay consistent, stay ahead.</p>
         </div>
-        <AddGoalDialog onAdd={addGoal} />
+        <div className="flex gap-2">
+          <StudySessionLogger onSessionSave={handleSessionSave} />
+          <AddGoalDialog onAdd={addGoal} />
+        </div>
       </motion.div>
 
       {/* Countdown Timers */}
