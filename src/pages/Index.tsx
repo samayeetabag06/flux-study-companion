@@ -35,6 +35,15 @@ export default function Index() {
     setStudyData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleSessionSave = (hours: number) => {
+    setStudyData((prev) => ({
+      ...prev,
+      todayHours: parseFloat((prev.todayHours + hours).toFixed(2)),
+      weekHours: parseFloat((prev.weekHours + hours).toFixed(2)),
+      monthHours: parseFloat((prev.monthHours + hours).toFixed(2)),
+    }));
+  };
+
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
