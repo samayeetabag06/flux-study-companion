@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, Square, Clock, Save, X } from "lucide-react";
+import { motion } from "framer-motion";
+import { Play, Pause, X, Clock, Save, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,7 +22,7 @@ import {
 interface StudySession {
   id: string;
   subject: string;
-  duration: number; // seconds
+  duration: number;
   date: string;
   notes: string;
 }
@@ -31,7 +31,33 @@ interface Props {
   onSessionSave: (hours: number) => void;
 }
 
-const SUBJECTS = ["DSA", "Web Dev", "Mathematics", "Physics", "Chemistry", "English", "General"];
+const DEFAULT_SUBJECTS = ["DSA", "Web Dev", "Mathematics", "Physics", "Chemistry", "English", "General"];
+
+function useSubjects() {
+  const [subjects, setSubjects] = useState<string[]>(() => {
+    const saved = localStorage.getItem("studyforge-subjects");
+    return saved ? JSON.parse(saved) : DEFAULT_SUBJECTS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("studyforge-subjects", JSON.stringify(subjects));
+  }, [subjects]);
+
+  const addSubject = (name: string) => {
+    const trimmed = name.trim();
+    if (trimmed && !subjects.includes(trimmed)) {
+      setSubjects((prev) => [...prev, trimmed]);
+    }
+  };
+
+  const removeSubject = (name: string) => {
+    if (subjects.length > 1) {
+      setSubjects((prev) => prev.filter((s) => s !== name));
+    }
+  };
+
+  return { subjects, addSubject, removeSubject };
+}
 
 export default function StudySessionLogger({ onSessionSave }: Props) {
   const [open, setOpen] = useState(false);
@@ -39,6 +65,9 @@ export default function StudySessionLogger({ onSessionSave }: Props) {
   const [elapsed, setElapsed] = useState(0);
   const [subject, setSubject] = useState("General");
   const [notes, setNotes] = useState("");
+  const [newSubject, setNewSubject] = useState("");
+  const [showSubjectInput, setShowSubjectInput] = useState(false);
+  const { subjects, addSubject, removeSubject } = useSubjects();
   const [sessions, setSessions] = useState<StudySession[]>(() => {
     const saved = localStorage.getItem("studyforge-sessions");
     return saved ? JSON.parse(saved) : [];
@@ -59,6 +88,13 @@ export default function StudySessionLogger({ onSessionSave }: Props) {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [running]);
+
+  // Keep subject valid
+  useEffect(() => {
+    if (!subjects.includes(subject)) {
+      setSubject(subjects[0] || "General");
+    }
+  }, [subjects, subject]);
 
   const toggleTimer = () => setRunning(!running);
 
@@ -88,6 +124,15 @@ export default function StudySessionLogger({ onSessionSave }: Props) {
     setRunning(false);
     if (intervalRef.current) clearInterval(intervalRef.current);
     setElapsed(0);
+  };
+
+  const handleAddSubject = () => {
+    if (newSubject.trim()) {
+      addSubject(newSubject.trim());
+      setSubject(newSubject.trim());
+      setNewSubject("");
+      setShowSubjectInput(false);
+    }
   };
 
   const formatTime = (totalSeconds: number) => {
@@ -151,16 +196,56 @@ export default function StudySessionLogger({ onSessionSave }: Props) {
           <div className="space-y-3">
             <div>
               <Label className="text-xs text-muted-foreground">Subject</Label>
-              <Select value={subject} onValueChange={setSubject}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {SUBJECTS.map((s) => (
-                    <SelectItem key={s} value={s}>{s}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex gap-2">
+                <Select value={subject} onValueChange={setSubject}>
+                  <SelectTrigger className="flex-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {subjects.map((s) => (
+                      <SelectItem key={s} value={s}>
+                        <div className="flex items-center justify-between w-full gap-2">
+                          <span>{s}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  onClick={() => setShowSubjectInput(!showSubjectInput)}
+                  title="Add subject"
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
+                {subjects.length > 1 && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => removeSubject(subject)}
+                    title="Remove current subject"
+                  >
+                    <Trash2 className="w-4 h-4 text-destructive" />
+                  </Button>
+                )}
+              </div>
+              {showSubjectInput && (
+                <div className="flex gap-2 mt-2">
+                  <Input
+                    placeholder="New subject name"
+                    value={newSubject}
+                    onChange={(e) => setNewSubject(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleAddSubject()}
+                    maxLength={30}
+                  />
+                  <Button size="sm" onClick={handleAddSubject} disabled={!newSubject.trim()}>
+                    Add
+                  </Button>
+                </div>
+              )}
             </div>
             <div>
               <Label className="text-xs text-muted-foreground">Notes (optional)</Label>

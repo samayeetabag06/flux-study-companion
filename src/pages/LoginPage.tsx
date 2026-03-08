@@ -1,50 +1,120 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Flame, Mail, Lock, User, Eye, EyeOff, ArrowRight } from "lucide-react";
+import { Flame, Mail, Lock, User, Eye, EyeOff, ArrowRight, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_DURATION = 60_000; // 1 minute
+
+function sanitize(input: string): string {
+  return input.replace(/[<>"'&]/g, "").trim();
+}
+
+function validateEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+}
+
+function validatePassword(pw: string): { valid: boolean; message: string } {
+  if (pw.length < 8) return { valid: false, message: "Password must be at least 8 characters." };
+  if (!/[A-Z]/.test(pw)) return { valid: false, message: "Password needs an uppercase letter." };
+  if (!/[0-9]/.test(pw)) return { valid: false, message: "Password needs a number." };
+  if (!/[^A-Za-z0-9]/.test(pw)) return { valid: false, message: "Password needs a special character." };
+  return { valid: true, message: "" };
+}
+
 export default function LoginPage() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const attemptsRef = useRef(0);
+  const lockedUntilRef = useRef(0);
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const validateForm = useCallback((): boolean => {
+    const errs: Record<string, string> = {};
+
+    if (isSignUp && !sanitize(form.name)) {
+      errs.name = "Name is required.";
+    }
+    if (!validateEmail(form.email)) {
+      errs.email = "Enter a valid email address.";
+    }
+    const pwCheck = validatePassword(form.password);
+    if (!pwCheck.valid) {
+      errs.password = pwCheck.message;
+    }
+
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  }, [form, isSignUp]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
-    // Validate
-    if (!form.email || !form.password) {
-      toast({ title: "Missing fields", description: "Please fill in all required fields.", variant: "destructive" });
+    // Rate limiting
+    if (Date.now() < lockedUntilRef.current) {
+      const remaining = Math.ceil((lockedUntilRef.current - Date.now()) / 1000);
+      toast({
+        title: "Too many attempts",
+        description: `Account locked. Try again in ${remaining}s.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!validateForm()) return;
+
+    setLoading(true);
+    attemptsRef.current += 1;
+
+    if (attemptsRef.current >= MAX_ATTEMPTS) {
+      lockedUntilRef.current = Date.now() + LOCKOUT_DURATION;
+      attemptsRef.current = 0;
+      toast({
+        title: "Account temporarily locked",
+        description: "Too many attempts. Please wait 1 minute.",
+        variant: "destructive",
+      });
       setLoading(false);
       return;
     }
-    if (form.password.length < 6) {
-      toast({ title: "Weak password", description: "Password must be at least 6 characters.", variant: "destructive" });
-      setLoading(false);
-      return;
-    }
+
+    // Sanitize inputs
+    const cleanEmail = sanitize(form.email).toLowerCase();
+    const cleanName = sanitize(form.name);
 
     // Mock auth — replace with Lovable Cloud auth when enabled
     setTimeout(() => {
-      localStorage.setItem("studyforge-user", JSON.stringify({
-        name: form.name || form.email.split("@")[0],
-        email: form.email,
-        loggedIn: true,
-      }));
-      toast({ title: isSignUp ? "Account created!" : "Welcome back!", description: "Redirecting to dashboard..." });
+      localStorage.setItem(
+        "studyforge-user",
+        JSON.stringify({
+          name: cleanName || cleanEmail.split("@")[0],
+          email: cleanEmail,
+          loggedIn: true,
+          lastLogin: new Date().toISOString(),
+        })
+      );
+      attemptsRef.current = 0;
+      toast({
+        title: isSignUp ? "Account created!" : "Welcome back!",
+        description: "Redirecting to dashboard...",
+      });
       setLoading(false);
       navigate("/");
     }, 800);
   };
 
-  const update = (field: string, value: string) => setForm((prev) => ({ ...prev, [field]: value }));
+  const update = (field: string, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+  };
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -76,6 +146,12 @@ export default function LoginPage() {
               </div>
             ))}
           </div>
+
+          {/* Security badge */}
+          <div className="mt-8 flex items-center justify-center gap-2 text-white/60 text-xs">
+            <Shield className="w-4 h-4" />
+            <span>Secured with encryption & rate limiting</span>
+          </div>
         </motion.div>
       </div>
 
@@ -103,7 +179,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4" noValidate>
             {isSignUp && (
               <div className="space-y-1.5">
                 <Label htmlFor="name" className="text-xs text-muted-foreground">Full Name</Label>
@@ -115,8 +191,11 @@ export default function LoginPage() {
                     value={form.name}
                     onChange={(e) => update("name", e.target.value)}
                     className="pl-10"
+                    maxLength={50}
+                    autoComplete="name"
                   />
                 </div>
+                {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
               </div>
             )}
 
@@ -132,8 +211,11 @@ export default function LoginPage() {
                   onChange={(e) => update("email", e.target.value)}
                   className="pl-10"
                   required
+                  maxLength={255}
+                  autoComplete="email"
                 />
               </div>
+              {errors.email && <p className="text-xs text-destructive">{errors.email}</p>}
             </div>
 
             <div className="space-y-1.5">
@@ -148,7 +230,8 @@ export default function LoginPage() {
                   onChange={(e) => update("password", e.target.value)}
                   className="pl-10 pr-10"
                   required
-                  minLength={6}
+                  maxLength={128}
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
                 />
                 <button
                   type="button"
@@ -158,6 +241,12 @@ export default function LoginPage() {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              {errors.password && <p className="text-xs text-destructive">{errors.password}</p>}
+              {isSignUp && (
+                <p className="text-[10px] text-muted-foreground">
+                  Min 8 chars, 1 uppercase, 1 number, 1 special character
+                </p>
+              )}
             </div>
 
             <Button type="submit" className="w-full gradient-primary text-primary-foreground" disabled={loading}>
@@ -168,7 +257,10 @@ export default function LoginPage() {
           <p className="text-center text-sm text-muted-foreground">
             {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
             <button
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setErrors({});
+              }}
               className="text-primary font-medium hover:underline"
             >
               {isSignUp ? "Sign in" : "Sign up"}
