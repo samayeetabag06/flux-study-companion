@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Flame, Mail, Lock, User, Eye, EyeOff, ArrowRight, Shield } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Shield } from "lucide-react";
+import fluxLogo from "@/assets/flux-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -106,12 +107,9 @@ export default function LoginPage() {
       <div className="hidden lg:flex lg:w-1/2 gradient-primary relative items-center justify-center p-12">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')] opacity-30" />
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="relative z-10 text-center">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
-              <Flame className="w-8 h-8 text-white" />
-            </div>
+          <div className="flex items-center justify-center mb-6">
+            <img src={fluxLogo} alt="Flux logo" className="h-16 w-auto object-contain" />
           </div>
-          <h1 className="text-4xl font-display font-bold text-white mb-3">Flux</h1>
           <p className="text-white/80 text-lg max-w-sm">
             Your personal study companion. Track progress, build habits, and ace your exams.
           </p>
@@ -135,11 +133,8 @@ export default function LoginPage() {
       {/* Right Panel - Form */}
       <div className="flex-1 flex items-center justify-center p-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-sm space-y-6">
-          <div className="lg:hidden flex items-center gap-2 justify-center mb-4">
-            <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-              <Flame className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-display font-bold text-xl text-foreground">Flux</span>
+          <div className="lg:hidden flex items-center justify-center mb-4">
+            <img src={fluxLogo} alt="Flux logo" className="h-10 w-auto object-contain" />
           </div>
 
           <div className="text-center lg:text-left">

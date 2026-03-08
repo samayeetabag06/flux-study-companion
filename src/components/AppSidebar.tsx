@@ -7,10 +7,10 @@ import {
   BarChart3,
   BookOpen,
   Trophy,
-  Flame,
   UserCircle,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import fluxLogo from "@/assets/flux-logo.png";
 
 const navItems = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -28,12 +28,7 @@ export default function AppSidebar() {
   return (
     <aside className="hidden md:flex flex-col w-64 bg-sidebar text-sidebar-foreground min-h-screen p-4 gap-2">
       <div className="flex items-center gap-3 px-3 py-4 mb-4">
-        <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center">
-          <Flame className="w-5 h-5 text-primary-foreground" />
-        </div>
-        <h1 className="font-display text-xl font-bold tracking-tight text-sidebar-foreground">
-          Flux
-        </h1>
+        <img src={fluxLogo} alt="Flux logo" className="h-10 w-auto object-contain" />
       </div>
 
       <nav className="flex flex-col gap-1 flex-1">
@@ -83,7 +78,7 @@ export default function AppSidebar() {
         <div className="flex gap-1 mt-2">
           {[1, 2, 3, 4, 5, 6, 7].map((d) => (
             <div key={d} className="w-5 h-5 rounded-full gradient-accent flex items-center justify-center">
-              <Flame className="w-3 h-3 text-accent-foreground" />
+              <span className="text-[8px]">🔥</span>
             </div>
           ))}
         </div>
