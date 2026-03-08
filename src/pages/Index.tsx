@@ -6,6 +6,7 @@ import SubjectBreakdown from "@/components/SubjectBreakdown";
 import QuickActions from "@/components/QuickActions";
 import MotivationalQuote from "@/components/MotivationalQuote";
 import AddGoalDialog from "@/components/AddGoalDialog";
+import StudySessionLogger from "@/components/StudySessionLogger";
 import { motion } from "framer-motion";
 
 const defaultGoals = [
