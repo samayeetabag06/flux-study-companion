@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Flame, Mail, Lock, User, Eye, EyeOff, ArrowRight, Shield } from "lucide-react";
+import { Mail, Lock, User, Eye, EyeOff, ArrowRight, Shield } from "lucide-react";
+import fluxLogo from "@/assets/flux-logo.png";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
