@@ -1,14 +1,68 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import CountdownCard from "@/components/CountdownCard";
+import StudyTrackerCard from "@/components/StudyTrackerCard";
+import WeeklyChart from "@/components/WeeklyChart";
+import SubjectBreakdown from "@/components/SubjectBreakdown";
+import QuickActions from "@/components/QuickActions";
+import MotivationalQuote from "@/components/MotivationalQuote";
+import AddGoalDialog from "@/components/AddGoalDialog";
+import { motion } from "framer-motion";
 
-const Index = () => {
+const defaultGoals = [
+  { id: "1", name: "JEE Mains", date: "2026-05-15", color: "blue" },
+  { id: "2", name: "Web Dev Cert", date: "2026-04-20", color: "orange" },
+];
+
+export default function Index() {
+  const [goals, setGoals] = useState(defaultGoals);
+
+  const addGoal = (goal: { id: string; name: string; date: string; color: string }) => {
+    setGoals((prev) => [...prev, goal]);
+  };
+
+  const removeGoal = (id: string) => {
+    setGoals((prev) => prev.filter((g) => g.id !== id));
+  };
+
+  const hour = new Date().getHours();
+  const greeting =
+    hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+      >
+        <div>
+          <h1 className="text-2xl font-display font-bold text-foreground">{greeting}, Scholar 👋</h1>
+          <p className="text-sm text-muted-foreground mt-0.5">Stay consistent, stay ahead.</p>
+        </div>
+        <AddGoalDialog onAdd={addGoal} />
+      </motion.div>
+
+      {/* Countdown Timers */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {goals.map((goal) => (
+          <CountdownCard key={goal.id} goal={goal} onRemove={removeGoal} />
+        ))}
+      </div>
+
+      {/* Study Stats & Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <StudyTrackerCard todayHours={3.5} weekHours={24} monthTarget={200} monthHours={87} />
+        <WeeklyChart />
+        <div className="space-y-4">
+          <QuickActions />
+          <MotivationalQuote />
+        </div>
+      </div>
+
+      {/* Subject Breakdown */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <SubjectBreakdown />
       </div>
     </div>
   );
-};
-
-export default Index;
+}
