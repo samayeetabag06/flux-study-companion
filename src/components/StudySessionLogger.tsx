@@ -40,7 +40,7 @@ function useSubjects() {
   });
 
   useEffect(() => {
-    localStorage.setItem("studyforge-subjects", JSON.stringify(subjects));
+    localStorage.setItem("flux-subjects", JSON.stringify(subjects));
   }, [subjects]);
 
   const addSubject = (name: string) => {
