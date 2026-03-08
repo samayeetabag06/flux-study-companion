@@ -16,6 +16,7 @@ const defaultGoals = [
 ];
 
 export default function Index() {
+  const { user } = useAuth();
   const [goals, setGoals] = useState(defaultGoals);
   const [studyData, setStudyData] = useState({
     todayHours: 3.5,
