@@ -6,6 +6,7 @@ import SubjectBreakdown from "@/components/SubjectBreakdown";
 import QuickActions from "@/components/QuickActions";
 import MotivationalQuote from "@/components/MotivationalQuote";
 import AddGoalDialog from "@/components/AddGoalDialog";
+import StudySessionLogger from "@/components/StudySessionLogger";
 import { motion } from "framer-motion";
 
 const defaultGoals = [
@@ -34,6 +35,15 @@ export default function Index() {
     setStudyData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleSessionSave = (hours: number) => {
+    setStudyData((prev) => ({
+      ...prev,
+      todayHours: parseFloat((prev.todayHours + hours).toFixed(2)),
+      weekHours: parseFloat((prev.weekHours + hours).toFixed(2)),
+      monthHours: parseFloat((prev.monthHours + hours).toFixed(2)),
+    }));
+  };
+
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
@@ -49,7 +59,10 @@ export default function Index() {
           <h1 className="text-2xl font-display font-bold text-foreground">{greeting}, Scholar 👋</h1>
           <p className="text-sm text-muted-foreground mt-0.5">Stay consistent, stay ahead.</p>
         </div>
-        <AddGoalDialog onAdd={addGoal} />
+        <div className="flex gap-2">
+          <StudySessionLogger onSessionSave={handleSessionSave} />
+          <AddGoalDialog onAdd={addGoal} />
+        </div>
       </motion.div>
 
       {/* Countdown Timers */}
