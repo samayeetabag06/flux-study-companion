@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 import CountdownCard from "@/components/CountdownCard";
 import StudyTrackerCard from "@/components/StudyTrackerCard";
 import WeeklyChart from "@/components/WeeklyChart";
