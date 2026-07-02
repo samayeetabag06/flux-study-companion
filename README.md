@@ -1,5 +1,6 @@
 # Welcome to your Lovable project
-
+<br>
+Author- Samayeeta Bag
 ## Project info
 
 **URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
